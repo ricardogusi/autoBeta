@@ -18,8 +18,13 @@ import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
+import gusi.springframework.springdata.model.Listener;
+
 @SpringBootApplication
 public class AutoApplication {
+	
+	
+	
 
 	private static ConfigurableApplicationContext context;
 
@@ -31,30 +36,28 @@ public class AutoApplication {
 		GpioPinDigitalInput pinWater = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29,
 				PinPullResistance.PULL_UP);
 
-		GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Led", PinState.LOW);
+		
 
+		 
 		pinWater.addListener(new GpioPinListenerDigital() {
-			@Override
-			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-				try {
-					
-
+				@Override
+				public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+					Listener listener = new Listener();
+					try {	
 						if (event.getState().isHigh()) {
 							System.out.println("PRECISA DE ÁGUA");
-							pin.high();
+							listener.setStatus(false);
 						} else {
 							System.out.println("NA ÁGUA");
-							pin.low();							
+							listener.setStatus(true);							
 						}
-						
+					} catch (Exception e) {
+						System.out.println(e);
+					}
 					
-
-				} catch (Exception e) {
-					System.out.println(e);
 				}
-
-			}
-		});
+			});
+		
 
 	}
 

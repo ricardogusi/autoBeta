@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
-
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
+import gusi.springframework.springdata.model.Listener;
 import gusi.springframework.springdata.repository.TimeRepository;
 
 @EnableScheduling
@@ -42,130 +41,78 @@ public class LedController {
 
 	@Autowired
 	private TimeRepository repository;
-	
-	
-	GpioController gpio = GpioFactory.getInstance();	
+
+	GpioController gpio = GpioFactory.getInstance();
 
 	
 
-	@Scheduled(cron = "#{@startTime1}")
-	public void runJobStart1() {
-
+	public void tooglePin() {
 		if (pin == null) {
 			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Led", PinState.LOW);
 		}
 		pin.toggle();
+	}
+
+	@Scheduled(cron = "#{@startTime1}")
+	public void runJobStart1() {
+		tooglePin();
 	}
 
 	@Scheduled(cron = "#{@stopTime1}")
 	public void runJobStop1() {
-
-		if (pin == null) {
-			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Led", PinState.LOW);
-		}
-		pin.toggle();
+		tooglePin();
 	}
 
 	@Scheduled(cron = "#{@startTime2}")
 	public void runJobStart2() {
-
-		if (pin == null) {
-			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Led", PinState.LOW);
-		}
-		pin.toggle();
+		tooglePin();
 	}
 
 	@Scheduled(cron = "#{@stopTime2}")
 	public void runJobStop2() {
-
-		if (pin == null) {
-			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Led", PinState.LOW);
-		}
-		pin.toggle();
+		tooglePin();
 	}
 
 	@Scheduled(cron = "#{@startTime3}")
 	public void runJobStart3() {
-
-		if (pin == null) {
-			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Led", PinState.LOW);
-		}
-		pin.toggle();
-	}
-
-	@Scheduled(cron = "#{@scheduledStart1}")
-	public void runJobScheduledStart1() {
-
-		if (pin == null) {
-			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Led", PinState.LOW);
-		}
-		pin.toggle();
-	}
-
-	@Scheduled(cron = "#{@scheduledStop1}")
-	public void runJobScheduledStop1() {
-
-		if (pin == null) {
-			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Led", PinState.LOW);
-		}
-		pin.toggle();
-	}
-
-	@Scheduled(cron = "#{@scheduledStart2}")
-	public void runJobScheduledStart2() {
-
-		if (pin == null) {
-			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Led", PinState.LOW);
-		}
-		pin.toggle();
-	}
-
-	@Scheduled(cron = "#{@scheduledStop2}")
-	public void runJobScheduledStop2() {
-
-		if (pin == null) {
-			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Led", PinState.LOW);
-		}
-		pin.toggle();
+		tooglePin();
 	}
 
 	@Scheduled(cron = "#{@stopTime3}")
 	public void runJobStop3() {
+		tooglePin();
+	}
 
-		if (pin == null) {
-			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Led", PinState.LOW);
-		}
-		pin.toggle();
+	@Scheduled(cron = "#{@scheduledStart1}")
+	public void runJobScheduledStart1() {
+		tooglePin();
+	}
+
+	@Scheduled(cron = "#{@scheduledStop1}")
+	public void runJobScheduledStop1() {
+		tooglePin();
+	}
+
+	@Scheduled(cron = "#{@scheduledStart2}")
+	public void runJobScheduledStart2() {
+		tooglePin();
+	}
+
+	@Scheduled(cron = "#{@scheduledStop2}")
+	public void runJobScheduledStop2() {
+		tooglePin();
 	}
 
 	@RequestMapping
 	public void light() {
-		if (pin == null) {
-			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Led", PinState.LOW);
-		}
-		pin.toggle();
+		tooglePin();
 	}
 
-	
-	
-	
-	
-//	public void humidity() { 
-//			
-//			 
-//			try {
-//				while(true) {
-//					if(pinWater.isHigh() ) {
-//						System.out.println("Água!!");
-//					} else { 
-//						System.out.println("Seco");
-//					}
-//					Thread.sleep(1000);
-//				}
-//			} catch (Exception e) { 
-//				System.out.println(e);
-//			}
-//	}
+	@GetMapping("/sensor")
+	public boolean humiditySensor() {
+		Listener listener = new Listener();
+		return listener.getStatus();
+	}
 
 //------------------------------- SALVAR HORÁRIOS DIÁRIO-------------------------------
 
